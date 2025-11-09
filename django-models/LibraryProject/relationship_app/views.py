@@ -6,6 +6,15 @@ from django.views.generic import DetailView
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.detail import DetailView
+from django.shortcuts import render
+from django.contrib.auth.decorators import user_passes_test
+
+def check_admin(user):
+    return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
+
+@user_passes_test(check_admin, login_url='/relationship_app/login/')
+def admin_view(request):
+    return render(request, 'relationship_app/admin_view.html')
 def index(request):
     return HttpResponse("Hello, this is the Relationship App page.")
 
@@ -71,4 +80,5 @@ def delete_book_view(request, pk):
         book.delete()
         return redirect('list_books')
     return render(request, 'relationship_app/delete_book.html', {'book': book})
+
 
