@@ -6,7 +6,8 @@ from django.contrib.auth.decorators import user_passes_test, permission_required
 from django.views.generic.detail import DetailView
 from django.urls import path
 from .models import Book, Library
-from .forms import BookForm  # Assuming a form for Book entries
+from .forms import BookForm  
+from django.contrib.auth.decorators import permission_required# Assuming a form for Book entries
 
 # Role checking functions
 def check_admin(user):
@@ -89,5 +90,6 @@ def delete_book_view(request, pk):
         book.delete()
         return redirect('list_books')
     return render(request, 'relationship_app/delete_book.html', {'book': book})
+
 
 
