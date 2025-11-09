@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Book, Library
+from .models import Library
 from django.views.generic import DetailView
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
@@ -32,4 +33,5 @@ def register(request):
             return redirect('library_detail')  # Redirect to a meaningful URL
     else:
         form = UserCreationForm()
+
     return render(request, 'relationship_app/register.html', {'form': form})
