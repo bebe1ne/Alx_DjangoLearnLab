@@ -20,6 +20,7 @@ class Book(models.Model):
             ("can_add_book", "Can add a new book"),
             ("can_change_book", "Can change book details"),
             ("can_delete_book", "Can delete a book"),
+            ("can_create_book", "Can create a book"),
         ]
 
     def __str__(self):
@@ -98,3 +99,4 @@ class CustomUser(AbstractUser):
 
 
 User = get_user_model()
+
