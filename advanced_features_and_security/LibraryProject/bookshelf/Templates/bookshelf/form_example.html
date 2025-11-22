@@ -1,0 +1,5 @@
+<form method="post" action="{% url 'create_book' %}">
+    {% csrf_token %}  <!-- Protect against CSRF attacks -->
+    {{ form.as_p }}
+    <input type="submit" value="Save">
+</form>
