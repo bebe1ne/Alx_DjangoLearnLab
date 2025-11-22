@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, permission_required
 from .forms import BookForm
-from .models import Book  # Assume you have a Book model
+from .models import Book
 
 @login_required
 @permission_required('bookshelf.view_book', raise_exception=True)
@@ -40,3 +40,4 @@ def delete_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     book.delete()
     return redirect('book_list')
+
