@@ -58,3 +58,8 @@ SECURE_BROWSER_XSS_FILTER = True  # Enables the browser's XSS protection feature
 
 # Documenting the purpose of each security setting
 # Comments added directly in settings to explain the security benefits
+# Secure Proxy SSL Header
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Ensure that your application only acknowledges requests via HTTPS when behind a proxy.
+# SECURE_PROXY_SSL_HEADER is set so Django knows when the request has indeed come over HTTPS.
