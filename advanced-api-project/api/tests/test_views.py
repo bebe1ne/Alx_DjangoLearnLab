@@ -17,3 +17,4 @@ class BookTests(APITestCase):
         book = Book.objects.create(title="Existing Book", publication_year=2020, author=self.author)
         response = self.client.get(reverse('book-detail', args=[book.id]))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+requirements.txt:
