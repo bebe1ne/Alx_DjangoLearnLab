@@ -7,7 +7,20 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post, Comment, Tag
 from .forms import PostForm, CommentForm, RegistrationForm
 from django.db.models import Q
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import ListView
+from .models import Post
+from taggit.models import Tag
 
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/post_list.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        tag_slug = self.kwargs.get('tag_slug')
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        return Post.objects.filter(tags__in=[tag])
 class PostListView(ListView):
     model = Post
     template_name = 'blog/post_list.html'
@@ -118,3 +131,4 @@ def search(request):
         Q(tags__name__icontains=query)
     ).distinct()
     return render(request, 'blog/search_results.html', {'posts': posts})
+
