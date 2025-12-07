@@ -1,9 +1,9 @@
 from pathlib import Path
 
 # Base directory for the project
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# SECURITY WARNING: keep the secret used in production!
 SECRET_KEY = 'your-secret-key'
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -57,6 +57,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'USER': '',  # Add database username if needed
+        'PASSWORD': '',  # Add database password if needed
+        'HOST': '',  # Add database host if not localhost
+        'PORT': '',  # Add database port if not default (e.g., 5432 for PostgreSQL)
     }
 }
 
