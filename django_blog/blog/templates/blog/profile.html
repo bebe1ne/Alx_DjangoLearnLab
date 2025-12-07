@@ -1,0 +1,12 @@
+
+{% extends "blog/base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<h1>Profile</h1>
+<p>Welcome, {{ user.username }}!</p>
+<p>Email: {{ user.email }}</p>
+<!-- Additional user info fields can be added here -->
+<a href="{% url 'post_list' %}">Back to posts</a>
+{% endblock %}
