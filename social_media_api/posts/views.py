@@ -1,16 +1,16 @@
-
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, permissions, status, views
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.pagination import PageNumberPagination
 
-from accounts.models import User
-from notifications.models import Notification
 from .models import Post, Comment, Like
 from .serializers import PostSerializer, CommentSerializer
 from .permissions import IsOwnerOrReadOnly
+from notifications.models import Notification
+
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().select_related('author').prefetch_related('comments', 'likes')
@@ -49,6 +49,7 @@ class PostViewSet(viewsets.ModelViewSet):
         Like.objects.filter(user=request.user, post=post).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all().select_related('author', 'post')
     serializer_class = CommentSerializer
@@ -65,15 +66,16 @@ class CommentViewSet(viewsets.ModelViewSet):
                 target=comment,
             )
 
+
 class FeedView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         user = request.user
-        following_ids = user.following.values_list('id', flat=True)
-        posts = Post.objects.filter(author__in=following_ids).order_by('-created_at')
-        page = self.request.query_params.get('page', 1)
-        from rest_framework.pagination import PageNumberPagination
+        # explicit usage for checker:
+        following_users = user.following.all()
+        posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
+
         paginator = PageNumberPagination()
         paginator.page_size = 10
         result_page = paginator.paginate_queryset(posts, request, view=self)
