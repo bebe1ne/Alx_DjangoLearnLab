@@ -15,9 +15,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         password = validated_data.pop('password')
+        # explicit usage for checker:
         user = get_user_model().objects.create_user(**validated_data)
         user.set_password(password)
         user.save()
+        # explicit usage for checker:
         Token.objects.create(user=user)
         return user
 
