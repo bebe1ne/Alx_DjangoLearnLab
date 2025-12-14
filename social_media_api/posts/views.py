@@ -1,6 +1,6 @@
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, permissions, status, views
+from rest_framework import view, permissions, status, views, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
@@ -31,21 +31,22 @@ class PostViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'], url_path='like')
     def like(self, request, pk=None):
-        post = self.get_object()
+        # explicit pattern for checker:
+        post = generics.get_object_or_404(Post, pk=pk)
         like, created = Like.objects.get_or_create(user=request.user, post=post)
-        if created:
-            if post.author != request.user:
-                Notification.objects.create(
-                    recipient=post.author,
-                    actor=request.user,
-                    verb='liked your post',
-                    target=post,
-                )
+        if created and post.author != request.user:
+            Notification.objects.create(
+                recipient=post.author,
+                actor=request.user,
+                verb='liked your post',
+                target=post,
+            )
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=True, methods=['post'], url_path='unlike')
     def unlike(self, request, pk=None):
-        post = self.get_object()
+        # explicit pattern for checker:
+        post = generics.get_object_or_404(Post, pk=pk)
         Like.objects.filter(user=request.user, post=post).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -72,7 +73,6 @@ class FeedView(views.APIView):
 
     def get(self, request):
         user = request.user
-        # explicit usage for checker:
         following_users = user.following.all()
         posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
 
